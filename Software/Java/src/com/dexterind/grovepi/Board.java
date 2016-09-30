@@ -13,6 +13,7 @@ import com.dexterind.grovepi.utils.*;
 import com.pi4j.io.i2c.I2CBus;
 import com.pi4j.io.i2c.I2CDevice;
 import com.pi4j.io.i2c.I2CFactory;
+import com.pi4j.io.i2c.I2CFactory.UnsupportedBusNumberException;
 import com.pi4j.system.NetworkInfo;
 import com.pi4j.system.SystemInfo;
 
@@ -27,7 +28,7 @@ public class Board {
   
   private Debug debug;
 
-  public Board() throws IOException, InterruptedException {
+  public Board() throws IOException, InterruptedException, UnsupportedBusNumberException {
     int busId;
 
     String type = SystemInfo.getBoardType().name();
@@ -44,7 +45,12 @@ public class Board {
 
   public static Board getInstance() throws IOException, InterruptedException {
     if(instance == null) {
-      instance = new Board();
+      try {
+		instance = new Board();
+	} catch (UnsupportedBusNumberException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
     }
     return instance;
   }
